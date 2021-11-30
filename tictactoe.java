@@ -92,7 +92,6 @@ public class tictactoe {
 				for (int position2 : row) {
 					if (position1 != position2 && v.get(position1) == v.get(position2)) {
 						if (v.get(position2).equals('o')) {
-							System.out.println("here");
 							row = removeFromArr(row, position1);
 							row = removeFromArr(row, position2);
 							
@@ -145,7 +144,6 @@ public class tictactoe {
 				int sysLocs[] = {7, 3};
 				int rnd = new Random().nextInt(sysLocs.length);
 				oLoc = sysLocs[rnd];
-				System.out.println(oLoc);
 			} else {
 				oLoc = 5;
 			}
