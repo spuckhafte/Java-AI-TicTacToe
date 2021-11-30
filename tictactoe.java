@@ -6,7 +6,7 @@ public class tictactoe {
 		InputStreamReader read = new InputStreamReader(System.in);
 		BufferedReader in = new BufferedReader(read);
 		
-		Dictionary v = new Hashtable<>();
+		Dictionary<Object, Object> v = new Hashtable<>();
 		for (int i=1;i<=9;i++) {
 			v.put(i, " ");
 		}
@@ -64,7 +64,7 @@ public class tictactoe {
 			System.out.println();
 			oLoc = 0;
 			
-			int get = win(v, oLoc, options, board_chart, winning_rows);
+			int get = win(v, oLoc, options, board_chart, winning_rows, locations);
 			if (get != 0) {
 				oLoc = get;
 			} else {
@@ -84,22 +84,24 @@ public class tictactoe {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public static int win(Dictionary v, int oLoc, String[] options, String level, int[][] winning_rows) {
+	public static int win(Dictionary v, int oLoc, String[] options, String level, int[][] winning_rows, int[] locations) {
 		boolean condition = true;
 		for (int[] row : winning_rows) {
 			for (int element : row) {
 				int position1 = element;
 				for (int position2 : row) {
 					if (position1 != position2 && v.get(position1) == v.get(position2)) {
-						if (v.get(position2) == "o") {
+						if (v.get(position2).equals('o')) {
+							System.out.println("here");
 							row = removeFromArr(row, position1);
 							row = removeFromArr(row, position2);
 							
-							String vrow0 = (String) v.get(row[0]);
+							String vrow0 = ""+v.get(row[0]);
 							if (S_check_element(options, vrow0) == false) {
-								oLoc = row[0];
-								condition = false;
-								break;
+								if (I_check_element(locations, row[0]))
+									oLoc = row[0];
+									condition = false;
+									break;
 							}
 						} else {
 							continue;
@@ -115,11 +117,11 @@ public class tictactoe {
 					int position1 = element;
 					for (int position2 : row) {
 						if (position1 != position2 && v.get(position1) == v.get(position2)) {
-							if (v.get(position2) == "x") {
+							if (v.get(position2).equals('x')) {
 								row = removeFromArr(row, position1);
 								row = removeFromArr(row, position2);
 								
-								String vrow0 = (String) v.get(row[0]);
+								String vrow0 = ""+v.get(row[0]);
 								if (S_check_element(options, vrow0) == false && level != "e") {
 									oLoc = row[0];
 									break;
@@ -133,7 +135,7 @@ public class tictactoe {
 			}
 		}
 		
-		return 0;
+		return oLoc;
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -141,7 +143,9 @@ public class tictactoe {
 		if (i == 1) {
 			if (xLoc == 5) {
 				int sysLocs[] = {7, 3};
-				oLoc = new Random().nextInt(sysLocs.length);
+				int rnd = new Random().nextInt(sysLocs.length);
+				oLoc = sysLocs[rnd];
+				System.out.println(oLoc);
 			} else {
 				oLoc = 5;
 			}
@@ -151,13 +155,14 @@ public class tictactoe {
 			while (true) {
 				if (v.get(7) == "o" || v.get(3) == "o") {
 					int _system_case_[] = {1,9};
-					oLoc = new Random().nextInt(_system_case_.length);
+					int rnd = new Random().nextInt(_system_case_.length);
+					oLoc = _system_case_[rnd];
 					break;
 				} else {
 					int system_case_[] = {2,8,4,6};
-					oLoc = new Random().nextInt(system_case_.length);
-					
-					String voloc = (String) v.get(oLoc);
+					int rnd = new Random().nextInt(system_case_.length);
+					oLoc = system_case_[rnd];
+					String voloc = ""+v.get(oLoc);
 					
 					boolean tempConditionCheck = S_check_element(options, voloc);
 					if (tempConditionCheck == false) {
@@ -170,7 +175,8 @@ public class tictactoe {
 		}
 		
 		if (i!=1 && i!=2) {
-			oLoc = new Random().nextInt(locations.length);
+			int rnd = new Random().nextInt(locations.length);
+			oLoc = locations[rnd];
 		}
 		
 		return oLoc;	
@@ -219,9 +225,11 @@ public class tictactoe {
 				condition = false;
 			}
 		}
-		if (i == 5) {
-			System.out.println("Tie");
-			condition = false;
+		if (condition) {
+			if (i == 5) {
+				System.out.println("Tie");
+				condition = false;
+			}
 		}
 		return condition;
 	}
